@@ -1,0 +1,2 @@
+E:/project/tubes_semester_6/android/app/.cxx/Debug/r2q1z3o3/x86_64/CMakeFiles/edit_cache.dir
+E:/project/tubes_semester_6/android/app/.cxx/Debug/r2q1z3o3/x86_64/CMakeFiles/rebuild_cache.dir
