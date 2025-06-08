@@ -101,7 +101,7 @@ class _PreviewScanState extends State<PreviewScan> {
                     });
                   },
                   child: Text(
-                    'Change Picture',
+                    'Ganti Gambar',
                     style: latoTextStyle.copyWith(
                       fontSize: getProportionateScreenWidth(16),
                       fontWeight: weightSemiBold,
@@ -136,7 +136,7 @@ class _PreviewScanState extends State<PreviewScan> {
                     );
                   },
                   child: Text(
-                    'Scan Now',
+                    'Scan Sekarang',
                     style: latoTextStyle.copyWith(
                       fontSize: getProportionateScreenWidth(16),
                       fontWeight: weightSemiBold,

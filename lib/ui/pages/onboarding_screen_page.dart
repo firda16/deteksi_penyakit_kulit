@@ -57,7 +57,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                 left: getProportionateScreenWidth(47),
                 right: getProportionateScreenWidth(63)),
             child: Text(
-              'Find out your skin disease easily here',
+              'Ketahui penyakit kulitmu dengan mudah di sini',
               style: opensansTextStyle.copyWith(
                 height: 0.89,
                 fontWeight: weightBold,
@@ -236,7 +236,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                     ),
                     child: Center(
                       child: Text(
-                        'Lets Get Started!',
+                        'Ayo Mulai!',
                         style: latoTextStyle.copyWith(
                           fontWeight: weightSemiBold,
                         ),

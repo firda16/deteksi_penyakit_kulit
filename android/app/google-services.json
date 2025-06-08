@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "274543452768",
+    "project_id": "aiskin-ca727",
+    "storage_bucket": "aiskin-ca727.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:274543452768:android:dc3857f693003820d11905",
+        "android_client_info": {
+          "package_name": "com.example.tubes_semester_6"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "274543452768-1cqc811tmshdsvk2i1ar4n7gci6iv9h2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tubes_semester_6",
+            "certificate_hash": "3693757e4103955c436bba799a4dc2ea97004f64"
+          }
+        },
+        {
+          "client_id": "274543452768-27c1bs25ppki9svlpjm98ftgbj3bhnlg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPXPNOY7m0qZOLV2gpxQ-qpVa4WGcMGVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "274543452768-27c1bs25ppki9svlpjm98ftgbj3bhnlg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

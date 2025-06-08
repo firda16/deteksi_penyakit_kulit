@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:tubes_semester_6/shared/size_config.dart';
 import 'package:tubes_semester_6/shared/theme.dart';
@@ -18,50 +20,56 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    _loadModel();
-    var Tflite;
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _imageClasification(widget.image, Tflite);
-    });
+    _sendToServer();
   }
 
-  @override
-  void dispose() {
-    var Tflite;
-    Tflite.close();
-    super.dispose();
-  }
+  Future<void> _sendToServer() async {
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://192.168.1.2:8000/predict'),
+      );
+      request.files.add(
+        await http.MultipartFile.fromPath('file', widget.image!.path),
+      );
 
-  void _loadModel() async {
-    var Tflite;
-    await Tflite.loadModel(
-      model: "assets/model.tflite",
-      labels: "assets/labels.txt",
-    );
-  }
+      var response = await request.send();
+      var responseBody = await response.stream.bytesToString();
 
-  void _imageClasification(File? image, dynamic Tflite) async {
-    var output = await Tflite.runModelOnImage(
-      path: image!.path,
-      numResults: 2,
-      threshold: 0.5,
-      imageMean: 127.5,
-      imageStd: 127.5,
-    );
-    setState(() {
-      print(output![0]["label"]);
-      Future.delayed(const Duration(milliseconds: 500), () {
+      if (response.statusCode == 200) {
+        final jsonResult = json.decode(responseBody);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => ResultPage(
               image: widget.image,
-              pred: output,
+              pred: jsonResult,
             ),
           ),
         );
-      });
-    });
+      } else {
+        _showError("Server returned error ${response.statusCode}");
+      }
+    } catch (e) {
+      _showError("Connection failed: $e");
+    }
+  }
+
+  void _showError(String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog( 
+        title: const Text("Error"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -105,7 +113,7 @@ class _LoadingPageState extends State<LoadingPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'We are scanning, please wait ...',
+                'Kami sedang memindai, harap tunggu ...',
                 style: latoTextStyle.copyWith(
                   fontSize: getProportionateScreenWidth(20),
                   fontWeight: weightBold,
@@ -122,7 +130,7 @@ class _LoadingPageState extends State<LoadingPage> {
                 ),
               ),
               Text(
-                '“Cleanliness is the only way to keep\nall the diseases away.”',
+                '“Kebersihan adalah satu-satunya cara\nuntuk menjauhkan semua penyakit.”',
                 style: latoTextStyle.copyWith(
                   fontSize: getProportionateScreenWidth(20),
                   fontWeight: weightBold,

@@ -2,10 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tubes_semester_6/shared/size_config.dart';
 import 'package:tubes_semester_6/shared/theme.dart';
 import 'package:tubes_semester_6/ui/pages/preview_scan_page.dart';
 import 'package:tubes_semester_6/ui/widgets/article_home_tile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -45,6 +47,31 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _logout() async {
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Konfirmasi Logout"),
+        content: const Text("Apakah kamu yakin ingin logout?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text("Batal"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text("Logout"),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout == true) {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,12 +79,26 @@ class _HomePageState extends State<HomePage> {
       height: MediaQuery.of(context).size.height,
       color: blueColor,
       child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
+                GestureDetector(
+                  onTap: _logout,
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      top: getProportionateScreenHeight(33),
+                      left: getProportionateScreenWidth(25),
+                    ),
+                    child: const Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+                ),
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
@@ -73,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                       width: getProportionateScreenWidth(37),
                     ),
                   ),
-                )
+                ),
               ],
             ),
             Container(
@@ -87,18 +128,20 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hello Friends,',
+                        'Hallo Teman-teman,',
                         style: latoTextStyle.copyWith(
-                          fontSize: 20,
-                          fontWeight: weightBold,
+                          fontFamily: 'Caveat',
+                          fontSize: 21,
+                          fontWeight: FontWeight.w700,
                           color: whiteColor,
                         ),
                       ),
                       Text(
-                        'don’t forget to keep your\nskinhealthy',
+                        'Jangan Lupa Untuk \nMenjaga Kesehatan \nKulit Mu!',
                         style: latoTextStyle.copyWith(
+                          fontFamily: 'PlayfairDisplay',
                           fontSize: 19,
-                          fontWeight: weightBold,
+                          fontWeight: FontWeight.w400,
                           color: whiteColor,
                         ),
                       ),
@@ -128,7 +171,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //Check your skin section
+                  // Check your skin section
                   Container(
                     margin: EdgeInsets.only(
                       top: getProportionateScreenHeight(30),
@@ -140,7 +183,7 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Check your skin now!',
+                          'Periksa kulit kamu sekarang!',
                           style: latoTextStyle.copyWith(
                             fontSize: 20,
                             fontWeight: weightBold,
@@ -176,9 +219,7 @@ class _HomePageState extends State<HomePage> {
                   // Line section
                   Container(
                     margin: EdgeInsets.symmetric(
-                      horizontal: getProportionateScreenWidth(
-                        23,
-                      ),
+                      horizontal: getProportionateScreenWidth(23),
                     ),
                     width: double.infinity,
                     height: 1,
@@ -197,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                             left: getProportionateScreenWidth(30),
                           ),
                           child: Text(
-                            'Articles',
+                            'Artikel',
                             style: latoTextStyle.copyWith(
                               fontSize: 20,
                               fontWeight: weightBold,
@@ -208,7 +249,7 @@ class _HomePageState extends State<HomePage> {
                           height: getProportionateScreenHeight(25),
                         ),
                         SingleChildScrollView(
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [

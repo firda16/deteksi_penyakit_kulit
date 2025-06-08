@@ -1,0 +1,2 @@
+D:/tubes_semester_6/android/app/.cxx/Debug/g1p2p136/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/tubes_semester_6/android/app/.cxx/Debug/g1p2p136/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:tubes_semester_6/shared/size_config.dart';
 import 'package:tubes_semester_6/shared/theme.dart';
 import 'package:tubes_semester_6/ui/pages/home/article_page.dart';
 import 'package:tubes_semester_6/ui/pages/home/home_page.dart';
+import 'package:tubes_semester_6/ui/pages/home/riwayat_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -19,49 +21,39 @@ class MainPage extends StatelessWidget {
     final pageProvider = Provider.of<PageProvider>(context);
 
     Widget customNavigationBar() {
-      return SizedBox(
-        height: getProportionateScreenHeight(70),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
-          ),
-          child: BottomAppBar(
-            child: BottomNavigationBar(
-              onTap: (value) => pageProvider.currentIndex = value,
-              type: BottomNavigationBarType.fixed,
-              currentIndex: pageProvider.currentIndex,
-              backgroundColor: blueColor,
-              selectedLabelStyle: opensansTextStyle.copyWith(
-                color: whiteColor,
-                fontSize: 12,
-                fontWeight: weightBold,
-              ),
-              selectedItemColor: whiteColor,
-              unselectedItemColor: whiteColor,
-              items: [
-                BottomNavigationBarItem(
-                  label: 'Home',
-                  icon: Image.asset(
-                    'assets/icon_home.png',
-                    color: pageProvider.currentIndex == 0
-                        ? yellowColor
-                        : whiteColor,
-                    width: getProportionateScreenWidth(30),
-                  ),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Article',
-                  icon: Image.asset(
-                    'assets/icon_article.png',
-                    width: getProportionateScreenWidth(26),
-                    color: pageProvider.currentIndex == 1
-                        ? yellowColor
-                        : whiteColor,
-                  ),
-                ),
-              ],
+      return ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(10),
+        ),
+        child: BottomAppBar(
+          child: BottomNavigationBar(
+            onTap: (value) => pageProvider.currentIndex = value,
+            type: BottomNavigationBarType.fixed,
+            currentIndex: pageProvider.currentIndex,
+            backgroundColor: blueColor,
+            selectedLabelStyle: opensansTextStyle.copyWith(
+              color: whiteColor,
+              fontSize: 12,
+              fontWeight: weightBold,
             ),
+            selectedItemColor: whiteColor,
+            unselectedItemColor: whiteColor,
+            iconSize: 24,
+            items: const [
+              BottomNavigationBarItem(
+                label: 'Home',
+                icon: Icon(Icons.home),
+              ),
+              BottomNavigationBarItem(
+                label: 'Artikel',
+                icon: Icon(Icons.article),
+              ),
+              BottomNavigationBarItem(
+                label: 'Riwayat',
+                icon: Icon(Icons.history),
+              ),
+            ],
           ),
         ),
       );
@@ -73,6 +65,8 @@ class MainPage extends StatelessWidget {
           return const HomePage();
         case 1:
           return const ArticlePage();
+        case 2:
+          return const RiwayatPage();
         default:
           return const HomePage();
       }
@@ -118,6 +112,13 @@ class MainPage extends StatelessWidget {
 
       return true;
     }
+    ElevatedButton(
+  onPressed: () async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacementNamed(context, '/login');
+  },
+  child: Text("Logout"),
+);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(

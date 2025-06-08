@@ -243,6 +243,7 @@ class _DetailResultPageState extends State<DetailResultPage> {
                         style: latoTextStyle.copyWith(
                           fontSize: getProportionateScreenWidth(13),
                         ),
+                        textAlign: TextAlign.justify,
                       ),
                     )
                   : GestureDetector(
@@ -262,7 +263,7 @@ class _DetailResultPageState extends State<DetailResultPage> {
                               ),
                             ),
                             TextSpan(
-                              text: '..more',
+                              text: '..lainnya',
                               style: latoTextStyle.copyWith(
                                   fontSize: getProportionateScreenWidth(12.5),
                                   color: blue2Color),
@@ -324,7 +325,7 @@ class _DetailResultPageState extends State<DetailResultPage> {
                       ),
                       child: Center(
                         child: Text(
-                          'Medicine',
+                          'Obat',
                           style: latoTextStyle.copyWith(
                             fontSize: getProportionateScreenWidth(20),
                             color: Colors.black,

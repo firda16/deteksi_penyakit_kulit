@@ -36,7 +36,7 @@ class ArticlePage extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                'Articles',
+                'Artikel',
                 style: latoTextStyle.copyWith(
                   fontSize: getProportionateScreenWidth(20),
                   fontWeight: weightBold,

@@ -1,26 +1,103 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:tubes_semester_6/provider/article_page_provider.dart';
+import 'package:tubes_semester_6/provider/liked_article_provider.dart'; // Import provider baru
 import 'package:tubes_semester_6/shared/size_config.dart';
 import 'package:tubes_semester_6/shared/theme.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
-class DetailArticle extends StatelessWidget {
-  const DetailArticle(
-      {Key? key,
-      required this.title,
-      required this.subTitle,
-      required this.image})
-      : super(key: key);
+class DetailArticle extends StatefulWidget {
+  const DetailArticle({
+    Key? key,
+    required this.title,
+    required this.subTitle,
+    required this.image,
+  }) : super(key: key);
+
   final String title;
   final String subTitle;
   final String image;
 
   @override
+  State<DetailArticle> createState() => _DetailArticleState();
+}
+
+class _DetailArticleState extends State<DetailArticle> {
+  final ScrollController _scrollController = ScrollController();
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  @override
+  void initState() {
+    super.initState();
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    _initializeNotification();
+  }
+
+  void _initializeNotification() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('ic_notification');
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  void _showLikeNotification() async {
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+      'like_channel_id',
+      'Notifikasi Like',
+      channelDescription: 'Notifikasi saat artikel disukai',
+      importance: Importance.max,
+      priority: Priority.high,
+      icon: 'ic_notification',
+    );
+
+    const NotificationDetails platformDetails =
+        NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Artikel Disukai',
+      'Kamu menyukai artikel ini.',
+      platformDetails,
+    );
+  }
+
+    void _showUnlikeNotification() async {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'like_channel_id',
+      'Notifikasi Unlike',
+      channelDescription: 'Notifikasi saat artikel tidak disukai lagi',
+      importance: Importance.max,
+      priority: Priority.high,
+      icon: 'ic_notification',
+    );
+
+    const NotificationDetails platformDetails = NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      1, // ID berbeda dari notifikasi like
+      'Artikel Tidak Disukai',
+      'Kamu tidak menyukai artikel "${widget.title}" lagi',
+      platformDetails,
+    );
+  }
+  
+  @override
   Widget build(BuildContext context) {
-    ScrollController _scrollController = ScrollController();
     ArticlePageProvider articlePageProvider =
         Provider.of<ArticlePageProvider>(context);
+    // Tambahkan provider untuk artikel yang disukai
+    LikedArticleProvider likedProvider =
+        Provider.of<LikedArticleProvider>(context);
+    // Cek status like dari provider
+    bool isLiked = likedProvider.isLiked(widget.title);
+
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
@@ -43,7 +120,7 @@ class DetailArticle extends StatelessWidget {
             children: [
               Center(
                 child: Text(
-                  title,
+                  widget.title,
                   style: latoTextStyle.copyWith(
                     fontSize: getProportionateScreenWidth(20),
                     fontWeight: weightBold,
@@ -51,7 +128,6 @@ class DetailArticle extends StatelessWidget {
                   ),
                 ),
               ),
-              // back arrow left position
               Positioned(
                 left: getProportionateScreenWidth(20),
                 top: getProportionateScreenHeight(24),
@@ -67,7 +143,7 @@ class DetailArticle extends StatelessWidget {
       ),
       body: VsScrollbar(
         controller: _scrollController,
-        showTrackOnHover: true, // default false
+        showTrackOnHover: true,
         isAlwaysShown: true,
         style: VsScrollbarStyle(
           color: Color(0xff9D9F9F),
@@ -75,7 +151,6 @@ class DetailArticle extends StatelessWidget {
           radius: Radius.circular(5),
           thickness: 7,
         ),
-
         child: ListView(
           physics: BouncingScrollPhysics(),
           controller: _scrollController,
@@ -95,24 +170,44 @@ class DetailArticle extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    image: AssetImage(image),
+                    image: AssetImage(widget.image),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
-            Text(
-              title,
-              style: latoTextStyle.copyWith(
-                fontSize: getProportionateScreenWidth(24),
-                fontWeight: weightMedium,
-              ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.title,
+                    style: latoTextStyle.copyWith(
+                      fontSize: getProportionateScreenWidth(24),
+                      fontWeight: weightMedium,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: isLiked ? Colors.red : Colors.grey,
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    likedProvider.toggleLike(widget.title);
+                    if (likedProvider.isLiked(widget.title)) {
+                      _showLikeNotification();
+                    } else {
+                      _showUnlikeNotification();
+                    }
+                  },
+                ),
+              ],
             ),
-            SizedBox(
-              height: getProportionateScreenHeight(14),
-            ),
+            SizedBox(height: getProportionateScreenHeight(14)),
             Text(
-              subTitle,
+              widget.subTitle,
               style: latoTextStyle.copyWith(
                 fontSize: getProportionateScreenWidth(16),
                 fontWeight: weightMedium,
@@ -124,4 +219,8 @@ class DetailArticle extends StatelessWidget {
       ),
     );
   }
+}
+
+class _showUnlikeNotification {
+
 }

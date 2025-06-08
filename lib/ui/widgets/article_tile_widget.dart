@@ -89,7 +89,7 @@ class ArticleTileWidget extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: '..more',
+                            text: '..lainnya',
                             style: latoTextStyle.copyWith(
                                 fontSize: getProportionateScreenWidth(12.5),
                                 color: blue2Color),

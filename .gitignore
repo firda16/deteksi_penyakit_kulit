@@ -41,3 +41,35 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Android CMake build artifacts
+android/app/.cxx/
+
+# CMake cache files
+**/CMakeCache.txt
+**/CMakeFiles/
+**/cmake_install.cmake
+**/build.ninja
+**/rules.ninja
+**/additional_project_files.txt
+**/metadata_generation_command.txt
+**/configure_fingerprint.bin
+**/prefab_config.json
+**/symbol_folder_index.txt
+**/hash_key.txt
+
+# General build directories
+/build/
+.gradle/
+local.properties
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDE specific
+.idea/
+*.iml
+
+# Misc
+*.log
